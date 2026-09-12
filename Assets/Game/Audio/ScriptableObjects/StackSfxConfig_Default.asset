@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2582e671ae234e3e9dce348589c605e5, type: 3}
+  m_Name: StackSfxConfig_Default
+  m_EditorClassIdentifier:
+  _jumpClipsByStackSize:
+  - {fileID: 8300000, guid: d4275752511dd40a38bccb8dc49fefee, type: 3}
+  - {fileID: 8300000, guid: 0c5be68db2ef247508447b602b723af8, type: 3}
+  - {fileID: 8300000, guid: 0027e94d9803f46fdb6d1d8e4a416b33, type: 3}
+  - {fileID: 8300000, guid: 15f5da9eb6de645d482798849c33012a, type: 3}
+  - {fileID: 8300000, guid: 93a4cf297da4043f8a616d07fafdb0a3, type: 3}
+  - {fileID: 8300000, guid: 7afd1a7b130164775956dcddfc7df185, type: 3}
+  _stackFallClip: {fileID: 8300000, guid: e7a886528863c46fd896dfcc7109f5d6, type: 3}
+  _pitchJitter: 0.08
+  _jumpVolume: 1
+  _fallVolume: 1
+  _spatialBlend: 1
+  _minStackForFall: 2

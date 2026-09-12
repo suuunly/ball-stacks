@@ -20,6 +20,9 @@ namespace BallStacks
         [SerializeField] private PlayerControlConfigSO _config;
         [SerializeField] private RuntimeSet _players;
 
+        [Tooltip("Raised with this PlayerController as payload whenever the player actually jumps (footing check passed).")]
+        [SerializeField] private GameEventPure _onJumped;
+
         public Ball ControlledBall { get; private set; }
         public int PlayerNumber { get; private set; }
         public Color AuraColor => _auraColor;
@@ -36,6 +39,7 @@ namespace BallStacks
         {
             Assert.IsNotNull(_config, "PlayerController: _config is not assigned in the inspector!");
             Assert.IsNotNull(_players, "PlayerController: _players is not assigned in the inspector!");
+            Assert.IsNotNull(_onJumped, "PlayerController: _onJumped is not assigned in the inspector!");
 
             _players.Add(this);
             UpdateControlState();
@@ -116,6 +120,7 @@ namespace BallStacks
             if (!HasSolidFootingBeneath()) { return; }
 
             JumpWithTower();
+            _onJumped.Raise(this);
         }
 
         // The whole tower jumps together: giving only the carrier the jump

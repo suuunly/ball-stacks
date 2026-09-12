@@ -1,0 +1,19 @@
+{
+    "name": "Game.Audio",
+    "rootNamespace": "BallStacks",
+    "references": [
+        "GUID:69df7096210344af8bcb4fc7c665bb23",
+        "GUID:0a48af7b45314135bd0953168a09cc24",
+        "GUID:24babab928c94788a120e0a82618aef0",
+        "GUID:9c916768d0bb49c79b1e705ece9da13b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
