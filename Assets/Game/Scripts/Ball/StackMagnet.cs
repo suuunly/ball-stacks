@@ -20,6 +20,9 @@ namespace BallStacks
     public class StackMagnet : MonoBehaviour
     {
         private const float CentreDeadzoneMetres = 0.05f;
+        private const float SeatProbeRadiusScale = 0.9f;
+        private const float SeatProbeDistance = 0.1f;
+        private const int MaxTowerWalkDepth = 8;
 
         [SerializeField] private StackMagnetConfigSO _config;
 
@@ -122,12 +125,38 @@ namespace BallStacks
             UpdateOwnerVelocity();
             PruneDestroyedBalls();
 
+            bool isAnchored = IsMagnetActive();
+            bool isCourtingLanders = IsCourtingLanders();
+            if (!isAnchored && !isCourtingLanders)
+            {
+                UpdateMagnetState();
+                return;
+            }
+
+            bool ownerIsSupported = IsSupported(_ownerBall);
+
             foreach (Ball capturedBall in _capturedBalls)
             {
                 Vector3 offsetFromOwner = capturedBall.Rigidbody.position - _ownerBall.Rigidbody.position;
                 if (!TryGetHoldFraction(offsetFromOwner, out float holdFraction)) { continue; }
 
+                // A player-driven ball must stay free to steer and roll off —
+                // checked every step because possession shifts while balls sit
+                // inside the zone. The one exception is landing assist: a
+                // claimable ball gently guides an incoming player onto its
+                // seat (horizontal pull only — real weight seats the claim).
+                if (IsPlayerDriven(capturedBall))
+                {
+                    if (!isCourtingLanders) { continue; }
+
+                    PullTowardRestingPoint(capturedBall, holdFraction * _config.LandingAssist);
+                    continue;
+                }
+
+                if (!isAnchored) { continue; }
+
                 PullTowardRestingPoint(capturedBall, holdFraction);
+                SupportWeight(capturedBall, ownerIsSupported);
             }
 
             UpdateMagnetState();
@@ -148,6 +177,45 @@ namespace BallStacks
             float smoothingTime = Mathf.Max(_config.OwnerVelocitySmoothingTime, Time.fixedDeltaTime);
             float blendWeight = Time.fixedDeltaTime / smoothingTime;
             _ownerVelocity = Vector3.Lerp(_ownerVelocity, instantaneousVelocity, blendWeight);
+        }
+
+        private static bool IsPlayerDriven(Ball capturedBall)
+        {
+            BallOccupancy occupancy = capturedBall.Occupancy;
+            return occupancy != null && occupancy.IsControlled;
+        }
+
+        private bool IsMagnetActive()
+        {
+            if (!_config.RequirePlayerAnchor) { return true; }
+
+            return IsAnchoredToPlayer();
+        }
+
+        // A claimable ball "courts" incoming players: only an unoccupied ball
+        // assists a landing, so rivals' towers never hold a player who wants
+        // to roll off.
+        private bool IsCourtingLanders()
+        {
+            if (_config.LandingAssist <= 0f) { return false; }
+
+            BallOccupancy occupancy = _ownerBall.Occupancy;
+            return occupancy != null && !occupancy.IsOccupied;
+        }
+
+        // The magnet is a property of a player's tower, not of balls: it only
+        // holds while this ball, or a ball beneath it in the stack, is
+        // possessed. A loose ball landing on an unclaimed pile just rolls off.
+        private bool IsAnchoredToPlayer()
+        {
+            Ball currentBall = _ownerBall;
+            for (int depth = 0; depth < MaxTowerWalkDepth; depth++)
+            {
+                if (IsPlayerDriven(currentBall)) { return true; }
+                if (!TryGetBallBeneath(currentBall, out currentBall)) { return false; }
+            }
+
+            return false;
         }
 
         private bool TryGetHoldFraction(Vector3 offsetFromOwner, out float holdFraction)
@@ -197,6 +265,73 @@ namespace BallStacks
             _ownerBall.Rigidbody.AddForce(counterForce, ForceMode.Force);
         }
 
+        private void SupportWeight(Ball capturedBall, bool ownerIsSupported)
+        {
+            bool hasSupportToGive = _config.WeightSupport > 0f;
+            if (!hasSupportToGive) { return; }
+
+            // An airborne tower must fly under true gravity for everyone:
+            // lifting gravity-free cargo during a jump makes it climb away
+            // from its carrier and scatter the stack on landing.
+            if (!ownerIsSupported) { return; }
+            if (!IsSeatedOnBall(capturedBall)) { return; }
+
+            // Deliberately no counter-force here: the whole point is to shed
+            // the cargo's weight off the ball beneath it so movement stays
+            // load-independent. Bounded by the ball's own weight (fraction
+            // capped at 1), so it can never fling anything upward.
+            float liftAcceleration = Physics.gravity.magnitude * Mathf.Clamp01(_config.WeightSupport);
+
+            // The seat is a damped equilibrium, not an on/off switch — without
+            // this a near-weightless ball pogos: any bounce unseats it, gravity
+            // returns, it slams back down, and the cycle repeats.
+            float verticalWobble = capturedBall.Rigidbody.linearVelocity.y - _ownerVelocity.y;
+            float dampingAcceleration = verticalWobble * _config.VerticalSeatDamping;
+
+            capturedBall.Rigidbody.AddForce(Vector3.up * (liftAcceleration - dampingAcceleration), ForceMode.Acceleration);
+        }
+
+        // Scoped to "seated on a ball" rather than supported by anything: a
+        // ball standing on a ledge floor inside our cone must keep its real
+        // weight, and a falling or jump-separated ball must keep real gravity.
+        private static bool IsSeatedOnBall(Ball capturedBall)
+        {
+            return TryGetBallBeneath(capturedBall, out _);
+        }
+
+        private static bool TryGetBallBeneath(Ball ball, out Ball ballBeneath)
+        {
+            ballBeneath = null;
+
+            if (!ProbeBeneath(ball, out RaycastHit hit)) { return false; }
+
+            Rigidbody bodyBeneath = hit.rigidbody;
+            bool hasBody = bodyBeneath != null;
+            return hasBody && bodyBeneath.TryGetComponent(out ballBeneath);
+        }
+
+        // Supported by anything solid — unlike the seat gate, a tower base
+        // standing on the arena floor counts.
+        private static bool IsSupported(Ball ball)
+        {
+            return ProbeBeneath(ball, out _);
+        }
+
+        private static bool ProbeBeneath(Ball ball, out RaycastHit hit)
+        {
+            hit = default;
+
+            BallOccupancy occupancy = ball.Occupancy;
+            if (occupancy == null) { return false; }
+
+            float probeRadius = occupancy.Radius * SeatProbeRadiusScale;
+            float probeDistance = (occupancy.Radius - probeRadius) + SeatProbeDistance;
+
+            return Physics.SphereCast(
+                ball.Rigidbody.position, probeRadius, Vector3.down, out hit,
+                probeDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore);
+        }
+
         private void PruneDestroyedBalls()
         {
             _capturedBalls.RemoveAll(static capturedBall => capturedBall == null);
@@ -212,6 +347,7 @@ namespace BallStacks
         private static readonly Color StrongHoldColour = new Color(0.2f, 1f, 0.4f, 0.9f);
         private static readonly Color WeakHoldColour = new Color(1f, 0.35f, 0.2f, 0.35f);
         private static readonly Color CaptureZoneColour = new Color(0.4f, 0.7f, 1f, 0.15f);
+        private static readonly Color DormantColour = new Color(0.5f, 0.5f, 0.5f, 0.2f);
         private const int ConeRingCount = 5;
         private const int RingSegments = 32;
         private const int ConeSlantLineCount = 8;
@@ -234,9 +370,11 @@ namespace BallStacks
             if (!canDraw) { return; }
 
             Vector3 apex = _ownerBall.transform.position;
+            bool isDormant = Application.isPlaying && !IsMagnetActive() && !IsCourtingLanders();
+
             DrawCaptureZone();
-            DrawHoldCone(apex);
-            DrawCapturedBallPulls(apex);
+            DrawHoldCone(apex, isDormant);
+            if (!isDormant) { DrawCapturedBallPulls(apex); }
         }
 
         private void DrawCaptureZone()
@@ -251,7 +389,7 @@ namespace BallStacks
             Gizmos.DrawWireSphere(zoneCentre, zoneRadius);
         }
 
-        private void DrawHoldCone(Vector3 apex)
+        private void DrawHoldCone(Vector3 apex, bool isDormant)
         {
             float halfAngle = Mathf.Min(_config.ConeHalfAngle, MaxDrawableHalfAngle);
             float rimRadius = _config.ConeHeight * Mathf.Tan(halfAngle * Mathf.Deg2Rad);
@@ -263,11 +401,26 @@ namespace BallStacks
                 float radius = rimRadius * heightT;
                 float strength = _config.HeightFalloff.Evaluate(heightT);
 
-                Gizmos.color = Color.Lerp(WeakHoldColour, StrongHoldColour, strength);
+                if (isDormant)
+                {
+                    Gizmos.color = DormantColour;
+                }
+                else
+                {
+                    Gizmos.color = Color.Lerp(WeakHoldColour, StrongHoldColour, strength);
+                }
+
                 DrawRing(apex + Vector3.up * height, radius);
             }
 
-            Gizmos.color = Color.Lerp(WeakHoldColour, StrongHoldColour, _config.LateralFalloff.Evaluate(1f));
+            if (isDormant)
+            {
+                Gizmos.color = DormantColour;
+            }
+            else
+            {
+                Gizmos.color = Color.Lerp(WeakHoldColour, StrongHoldColour, _config.LateralFalloff.Evaluate(1f));
+            }
             Vector3 rimCentre = apex + Vector3.up * _config.ConeHeight;
             for (int line = 0; line < ConeSlantLineCount; line++)
             {
@@ -284,6 +437,7 @@ namespace BallStacks
             foreach (Ball capturedBall in _capturedBalls)
             {
                 if (capturedBall == null) { continue; }
+                if (IsPlayerDriven(capturedBall) && !IsCourtingLanders()) { continue; }
 
                 Vector3 ballPosition = capturedBall.transform.position;
                 Vector3 offsetFromOwner = ballPosition - apex;

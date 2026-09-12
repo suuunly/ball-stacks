@@ -31,6 +31,20 @@ namespace BallStacks
         [Tooltip("The most acceleration (m/s²) the magnet can ever apply — the single strength knob. Violent movement the magnet cannot match breaks the stack.")]
         [SerializeField] private float _maxPullAcceleration = 30f;
 
+        [Tooltip("How much of a held ball's weight the magnet carries (0 = none, 1 = full levitation). Sheds cargo weight off the ball beneath so movement stays load-independent. Keep slightly below 1 so residual weight presses the ball into its seat — at exactly 1 the ball is neutrally buoyant and pogos on any bounce. Only applies while the held ball is seated on another ball AND this ball is itself supported — airborne towers fly under true gravity.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _weightSupport = 0.9f;
+
+        [Tooltip("How strongly vertical wobble between a seated ball and its carrier is damped. Kills the bounce cycle a weightless seat would otherwise pogo on.")]
+        [SerializeField] private float _verticalSeatDamping = 6f;
+
+        [Tooltip("When on, a magnet only holds while its ball is part of a player-controlled tower (the ball itself, or a ball beneath it in the stack, is possessed). Loose balls landing on unclaimed balls simply roll off.")]
+        [SerializeField] private bool _requirePlayerAnchor = true;
+
+        [Tooltip("How strongly a CLAIMABLE (unoccupied) ball guides a player's ball onto its seat, as a fraction of normal hold. Makes jump-landings forgiving without making rivals' towers sticky — occupied balls give no help, so rolling off an opponent's stack stays free. 0 = landings are pure skill.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _landingAssist = 0.6f;
+
         [Tooltip("How strongly horizontal wobble relative to the ball below is damped. Higher = settles faster and the ball on top is carried more firmly.")]
         [SerializeField] private float _horizontalDamping = 8f;
 
@@ -42,6 +56,10 @@ namespace BallStacks
         public AnimationCurve LateralFalloff => _lateralFalloff;
         public AnimationCurve HeightFalloff => _heightFalloff;
         public float MaxPullAcceleration => _maxPullAcceleration;
+        public float WeightSupport => _weightSupport;
+        public float VerticalSeatDamping => _verticalSeatDamping;
+        public bool RequirePlayerAnchor => _requirePlayerAnchor;
+        public float LandingAssist => _landingAssist;
         public float HorizontalDamping => _horizontalDamping;
         public float OwnerVelocitySmoothingTime => _ownerVelocitySmoothingTime;
     }

@@ -11,13 +11,15 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b616960403064413a456d9b80c6ceb9b, type: 3}
   m_Name: PlayerControlConfig_Default
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   _moveAcceleration: 20
-  _maxMoveSpeed: 6
-  _jumpSpeed: 6.5
+  _maxMoveSpeed: 8
+  _stopDeceleration: 10
+  _jumpSpeed: 8
   _groundProbeDistance: 0.1
   _groundLayers:
     serializedVersion: 2
     m_Bits: 4294967295
   _minLandingNormalY: 0.6
   _maxTowerWalkDepth: 12
+  _claimSettleTime: 0.3

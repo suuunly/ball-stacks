@@ -10,10 +10,16 @@ namespace Gaman
     public class CollisionRelay : MonoBehaviour
     {
         public event Action<Collision> CollisionEntered;
+        public event Action<Collision> CollisionStayed;
 
         private void OnCollisionEnter(Collision collision)
         {
             CollisionEntered?.Invoke(collision);
+        }
+
+        private void OnCollisionStay(Collision collision)
+        {
+            CollisionStayed?.Invoke(collision);
         }
     }
 }

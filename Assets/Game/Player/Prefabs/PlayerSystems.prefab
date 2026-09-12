@@ -50,6 +50,9 @@ MonoBehaviour:
   _rightSeatMove: {fileID: 3608618696671277883, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _rightSeatJump: {fileID: -6740690700072306231, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   _playerPrefab: {fileID: 1000000000000000003, guid: 8347b342341043a7a948b11a317a471f, type: 3}
-  _ballPrefab: {fileID: 7000000000000000001, guid: 3e2709e3be32148eebd21cbde00d7f4d, type: 3}
-  _spawnPoints: []
   _maxPlayers: 4
+  _playerColors:
+  - {r: 1, g: 0.35, b: 0.25, a: 1}
+  - {r: 0.25, g: 0.55, b: 1, a: 1}
+  - {r: 0.4, g: 0.9, b: 0.4, a: 1}
+  - {r: 1, g: 0.85, b: 0.3, a: 1}

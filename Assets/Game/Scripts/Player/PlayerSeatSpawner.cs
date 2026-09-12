@@ -26,9 +26,16 @@ namespace BallStacks
 
         [Header("Spawning")]
         [SerializeField] private PlayerController _playerPrefab;
-        [SerializeField] private Ball _ballPrefab;
-        [SerializeField] private Transform[] _spawnPoints;
         [SerializeField] private int _maxPlayers = 4;
+
+        [Tooltip("Aura colour per player, in join order.")]
+        [SerializeField] private Color[] _playerColors =
+        {
+            new Color(1f, 0.35f, 0.25f),
+            new Color(0.25f, 0.55f, 1f),
+            new Color(0.4f, 0.9f, 0.4f),
+            new Color(1f, 0.85f, 0.3f),
+        };
 
         private readonly List<Seat> _seats = new List<Seat>();
         private readonly List<InputActionAsset> _actionInstances = new List<InputActionAsset>();
@@ -43,9 +50,8 @@ namespace BallStacks
             Assert.IsNotNull(_rightSeatMove, "PlayerSeatSpawner: _rightSeatMove is not assigned in the inspector!");
             Assert.IsNotNull(_rightSeatJump, "PlayerSeatSpawner: _rightSeatJump is not assigned in the inspector!");
             Assert.IsNotNull(_playerPrefab, "PlayerSeatSpawner: _playerPrefab is not assigned in the inspector!");
-            Assert.IsNotNull(_ballPrefab, "PlayerSeatSpawner: _ballPrefab is not assigned in the inspector!");
-            Assert.IsTrue(_spawnPoints != null && _spawnPoints.Length > 0,
-                "PlayerSeatSpawner: no spawn points assigned in the inspector!");
+            Assert.IsTrue(_playerColors != null && _playerColors.Length > 0,
+                "PlayerSeatSpawner: no player colours assigned in the inspector!");
         }
 
         private void OnEnable()
@@ -122,12 +128,15 @@ namespace BallStacks
 
         private void SpawnPlayer(Seat seat)
         {
-            Transform spawnPoint = _spawnPoints[_spawnedPlayerCount % _spawnPoints.Length];
+            Color auraColor = _playerColors[_spawnedPlayerCount % _playerColors.Length];
             _spawnedPlayerCount++;
 
-            Ball ball = Instantiate(_ballPrefab, spawnPoint.position, spawnPoint.rotation);
             PlayerController player = Instantiate(_playerPrefab);
-            player.Initialize(seat.MoveAction, seat.JumpAction, ball);
+            player.Initialize(seat.MoveAction, seat.JumpAction, auraColor);
+
+            player.TryGetComponent(out PlayerBallSelector selector);
+            Assert.IsNotNull(selector, "PlayerSeatSpawner: player prefab has no PlayerBallSelector component!");
+            selector.BeginSelection(seat.MoveAction, seat.JumpAction, auraColor);
         }
 
         private void DisposeSeats()

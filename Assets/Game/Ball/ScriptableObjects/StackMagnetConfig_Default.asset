@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fb0a1e0541491294c16bc792a4c59f, type: 3}
   m_Name: StackMagnetConfig_Default
   m_EditorClassIdentifier: 
-  _coneHalfAngle: 8
-  _coneHeight: 3
+  _coneHalfAngle: 20
+  _coneHeight: 7
   _lateralFalloff:
     serializedVersion: 2
     m_Curve:
@@ -62,6 +62,10 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  _maxPullAcceleration: 100
+  _maxPullAcceleration: 30
+  _weightSupport: 0.9
+  _verticalSeatDamping: 6
+  _requirePlayerAnchor: 1
+  _landingAssist: 0.6
   _horizontalDamping: 8
   _ownerVelocitySmoothingTime: 0.2

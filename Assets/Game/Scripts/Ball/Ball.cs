@@ -10,6 +10,7 @@ namespace BallStacks
     public class Ball : MonoBehaviour
     {
         private Rigidbody _rigidbody;
+        private BallOccupancy _occupancy;
 
         // Lazily re-acquired instead of cached in Awake: a mid-play domain
         // reload (script recompile while testing) wipes the cache and Awake
@@ -20,6 +21,15 @@ namespace BallStacks
             {
                 if (_rigidbody == null) { _rigidbody = GetComponent<Rigidbody>(); }
                 return _rigidbody;
+            }
+        }
+
+        public BallOccupancy Occupancy
+        {
+            get
+            {
+                if (_occupancy == null) { _occupancy = GetComponent<BallOccupancy>(); }
+                return _occupancy;
             }
         }
 
