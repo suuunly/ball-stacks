@@ -12,7 +12,7 @@ namespace BallStacks
     [CreateAssetMenu(fileName = "BallSpawnConfig", menuName = "Ball Stacks/Ball Spawn Config")]
     public class BallSpawnConfigSO : ScriptableObject
     {
-        /// <summary>One spawnable ball variant and its relative rarity.</summary>
+        /// <summary>One spawnable ball variant, its relative rarity, and how much its size may vary.</summary>
         [System.Serializable]
         public class SpawnEntry
         {
@@ -23,8 +23,22 @@ namespace BallStacks
             [Min(0f)]
             [SerializeField] private float _weight = 1f;
 
+            [Tooltip("Smallest size multiplier this variant can spawn at. 1 = the prefab's own size.")]
+            [Min(0.05f)]
+            [SerializeField] private float _minSize = 1f;
+
+            [Tooltip("Largest size multiplier this variant can spawn at. Keep both at 1 for a fixed-size variant.")]
+            [Min(0.05f)]
+            [SerializeField] private float _maxSize = 1f;
+
             public Ball Prefab => _prefab;
             public float Weight => _weight;
+
+            /// <summary>Rolls a random size multiplier within this variant's range.</summary>
+            public float RollSizeMultiplier()
+            {
+                return Random.Range(_minSize, _maxSize);
+            }
         }
 
         [Tooltip("How many balls the burst drops into the arena at level start.")]
@@ -37,8 +51,8 @@ namespace BallStacks
         public int SpawnCount => _spawnCount;
         public IReadOnlyList<SpawnEntry> Balls => _balls;
 
-        /// <summary>Picks a ball prefab at random, honouring the entry weights.</summary>
-        public Ball PickRandomPrefab()
+        /// <summary>Picks a spawn entry at random, honouring the entry weights.</summary>
+        public SpawnEntry PickRandomEntry()
         {
             float totalWeight = 0f;
             foreach (SpawnEntry entry in _balls)
@@ -53,11 +67,11 @@ namespace BallStacks
             foreach (SpawnEntry entry in _balls)
             {
                 roll -= entry.Weight;
-                if (roll <= 0f) { return entry.Prefab; }
+                if (roll <= 0f) { return entry; }
             }
 
             // Float rounding can leave a sliver of roll after the last entry.
-            return _balls[_balls.Count - 1].Prefab;
+            return _balls[_balls.Count - 1];
         }
     }
 }

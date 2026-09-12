@@ -5,8 +5,9 @@ namespace BallStacks
 {
     /// <summary>
     /// A box volume that fills the arena with loose balls in one burst at
-    /// level start. Each ball is a random variant from the spawn config,
-    /// dropped at a random point inside the box — place the box above the
+    /// level start. Each ball is a random variant from the spawn config at a
+    /// random size within that variant's range, dropped at a random point
+    /// inside the box — place the box above the
     /// ground so balls rain in from varying heights. Move, rotate, and
     /// resize the volume in the Scene view via its transform and the
     /// wire-box gizmo. Balls may land on anything below, including player
@@ -38,11 +39,25 @@ namespace BallStacks
         {
             for (int i = 0; i < _config.SpawnCount; i++)
             {
-                Ball prefab = _config.PickRandomPrefab();
-                Assert.IsNotNull(prefab, "BallSpawnVolume: a spawn entry in the config has no prefab assigned!");
+                BallSpawnConfigSO.SpawnEntry entry = _config.PickRandomEntry();
+                Assert.IsNotNull(entry.Prefab, "BallSpawnVolume: a spawn entry in the config has no prefab assigned!");
 
-                Instantiate(prefab, RandomPointInVolume(), Random.rotation);
+                Ball ball = Instantiate(entry.Prefab, RandomPointInVolume(), Random.rotation);
+                ApplySizeVariation(ball, entry.RollSizeMultiplier());
             }
+        }
+
+        private static void ApplySizeVariation(Ball ball, float sizeMultiplier)
+        {
+            bool keepsPrefabSize = Mathf.Approximately(sizeMultiplier, 1f);
+            if (keepsPrefabSize) { return; }
+
+            ball.transform.localScale *= sizeMultiplier;
+
+            // Mass follows volume so a grown ball lands and shoves like the
+            // bigger ball it now is, instead of bouncing around like a balloon.
+            float volumeGrowth = sizeMultiplier * sizeMultiplier * sizeMultiplier;
+            ball.Rigidbody.mass *= volumeGrowth;
         }
 
         private Vector3 RandomPointInVolume()

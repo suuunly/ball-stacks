@@ -21,6 +21,8 @@ namespace BallStacks
         [SerializeField] private RuntimeSet _players;
 
         public Ball ControlledBall { get; private set; }
+        public int PlayerNumber { get; private set; }
+        public Color AuraColor => _auraColor;
 
         private InputAction _moveAction;
         private InputAction _jumpAction;
@@ -46,9 +48,10 @@ namespace BallStacks
             ReleaseControlledBall();
         }
 
-        /// <summary>Hands this player its seat input and colour. Ball control starts at <see cref="Possess"/>.</summary>
-        public void Initialize(InputAction moveAction, InputAction jumpAction, Color auraColor)
+        /// <summary>Hands this player its number, seat input and colour. Ball control starts at <see cref="Possess"/>.</summary>
+        public void Initialize(int playerNumber, InputAction moveAction, InputAction jumpAction, Color auraColor)
         {
+            PlayerNumber = playerNumber;
             _moveAction = moveAction;
             _jumpAction = jumpAction;
             _auraColor = auraColor;
@@ -122,7 +125,8 @@ namespace BallStacks
         // player's controlled ball — rivals don't get free launches.
         private void JumpWithTower()
         {
-            Vector3 jumpVelocity = Vector3.up * _config.JumpSpeed;
+            float controlledDiameter = _controlledOccupancy.Radius * 2f;
+            Vector3 jumpVelocity = Vector3.up * _config.JumpSpeedForDiameter(controlledDiameter);
 
             Ball current = ControlledBall;
             for (int depth = 0; depth <= _config.MaxTowerWalkDepth; depth++)

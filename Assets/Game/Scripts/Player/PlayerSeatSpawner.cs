@@ -130,9 +130,10 @@ namespace BallStacks
         {
             Color auraColor = _playerColors[_spawnedPlayerCount % _playerColors.Length];
             _spawnedPlayerCount++;
+            int playerNumber = _spawnedPlayerCount;
 
             PlayerController player = Instantiate(_playerPrefab);
-            player.Initialize(seat.MoveAction, seat.JumpAction, auraColor);
+            player.Initialize(playerNumber, seat.MoveAction, seat.JumpAction, auraColor);
 
             player.TryGetComponent(out PlayerBallSelector selector);
             Assert.IsNotNull(selector, "PlayerSeatSpawner: player prefab has no PlayerBallSelector component!");

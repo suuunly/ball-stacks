@@ -20,8 +20,16 @@ namespace BallStacks
         [SerializeField] private float _stopDeceleration = 10f;
 
         [Header("Jumping")]
-        [Tooltip("Upward velocity (m/s) added when jumping.")]
+        [Tooltip("Upward velocity (m/s) added when a ball of the reference size jumps.")]
         [SerializeField] private float _jumpSpeed = 6.5f;
+
+        [Tooltip("Ball diameter (units) that jumps at exactly Jump Speed. Smaller balls jump lower, bigger balls higher, per the exponent below.")]
+        [Min(0.05f)]
+        [SerializeField] private float _jumpSizeReference = 1f;
+
+        [Tooltip("How strongly jump strength follows ball size. 0 = every ball jumps the same absolute height regardless of size; 0.5 = jump height grows in step with diameter, so every ball can climb balls of its own size; 1 = big balls launch disproportionately.")]
+        [Range(0f, 1f)]
+        [SerializeField] private float _jumpSizeExponent = 0.5f;
 
         [Tooltip("How far below the ball's surface the ground probe reaches (m). Bigger = more forgiving jumps.")]
         [SerializeField] private float _groundProbeDistance = 0.1f;
@@ -45,6 +53,17 @@ namespace BallStacks
         public float StopDeceleration => _stopDeceleration;
         public float ClaimSettleTime => _claimSettleTime;
         public float JumpSpeed => _jumpSpeed;
+
+        /// <summary>
+        /// Jump velocity for a ball of the given diameter. Jump height scales
+        /// with velocity squared, so an exponent of 0.5 here makes jump
+        /// HEIGHT track diameter linearly — every ball can climb its own kind.
+        /// </summary>
+        public float JumpSpeedForDiameter(float diameter)
+        {
+            float sizeRatio = diameter / _jumpSizeReference;
+            return _jumpSpeed * Mathf.Pow(sizeRatio, _jumpSizeExponent);
+        }
         public float GroundProbeDistance => _groundProbeDistance;
         public LayerMask GroundLayers => _groundLayers;
         public float MinLandingNormalY => _minLandingNormalY;

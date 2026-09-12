@@ -73,8 +73,11 @@ namespace BallStacks
         // Casts a slightly-smaller sphere downward from the ball's centre. The
         // ball's own collider fully overlaps the cast at its start, so physics
         // ignores it and only whatever lies beneath is reported.
-        private bool IsRestingOnAnotherBall()
+        /// <summary>Finds the ball this ball currently rests on, if any.</summary>
+        public bool TryGetSupportingBall(out Ball supportingBall)
         {
+            supportingBall = null;
+
             float ballRadius = Radius;
             float probeRadius = ballRadius * ProbeRadiusScale;
             float probeDistance = (ballRadius - probeRadius) + _probeDistance;
@@ -86,7 +89,12 @@ namespace BallStacks
 
             Rigidbody bodyBeneath = hit.rigidbody;
             bool hasBody = bodyBeneath != null;
-            return hasBody && bodyBeneath.TryGetComponent(out Ball _);
+            return hasBody && bodyBeneath.TryGetComponent(out supportingBall);
+        }
+
+        private bool IsRestingOnAnotherBall()
+        {
+            return TryGetSupportingBall(out _);
         }
 
         private float ResolveRadius()

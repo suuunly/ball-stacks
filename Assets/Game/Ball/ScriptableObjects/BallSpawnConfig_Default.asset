@@ -12,17 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 762df3adb27c54529ac88ec69b622ab8, type: 3}
   m_Name: BallSpawnConfig_Default
   m_EditorClassIdentifier: Game.Ball::BallStacks.BallSpawnConfigSO
-  _spawnCount: 30
+  _spawnCount: 80
   _balls:
   - _prefab: {fileID: 1774949867940619219, guid: cef7f9b6d462e4961ae66d099c358054, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
   - _prefab: {fileID: 8129584122253199901, guid: 53b4c2a02a805450ca0493b565614a10, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
   - _prefab: {fileID: 3004833366159075761, guid: 30d8bfa481c2d4e7a9622a1e1d0a06dd, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
   - _prefab: {fileID: 8101298392372604052, guid: 774a0520c51184fb98182a819f3d82b8, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
   - _prefab: {fileID: 1297895532679721385, guid: 245731243ca8643b5a154fba5de00d07, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
   - _prefab: {fileID: 5471601214020916427, guid: 69c679d457b074c2e8e83ec5a98eb473, type: 3}
     _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
