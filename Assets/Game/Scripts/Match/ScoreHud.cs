@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using Gaman;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace BallStacks
 {
@@ -9,33 +8,45 @@ namespace BallStacks
     /// Spawns one <see cref="PlayerScoreBadge"/> per joined player, colour-
     /// coded with their aura, and keeps every badge's centimetre reading
     /// current. Purely event-driven off the scores-changed event, so it also
-    /// picks up players the moment they join mid-round. Badges are laid out
-    /// by a LayoutGroup on the container when one exists; without one, each
-    /// badge is offset from the previous by a fixed step.
+    /// picks up players the moment they join mid-round. Badges sit one per
+    /// screen corner by player number: P1 top-left, P2 top-right,
+    /// P3 bottom-left, P4 bottom-right.
     /// </summary>
     public class ScoreHud : MonoBehaviour
     {
+        // Corner per player number (1-based), matching the aura colours'
+        // join order: red TL, blue TR, green BL, yellow BR.
+        private static readonly Vector2[] CornerAnchors =
+        {
+            new Vector2(0f, 1f),
+            new Vector2(1f, 1f),
+            new Vector2(0f, 0f),
+            new Vector2(1f, 0f),
+        };
+
         [Tooltip("Raised by the StackScoreboard whenever any player's stack changes.")]
         [SerializeField] private GameEventPure _onScoresChanged;
 
         [Tooltip("The badge spawned per player — the Score prefab.")]
         [SerializeField] private PlayerScoreBadge _badgePrefab;
 
-        [Tooltip("Where badges are parented. Empty = this object. Add a LayoutGroup here to control placement; without one, badges step by Badge Step.")]
+        [Tooltip("Badges anchor to the corners of this rect. Empty = this object, stretched to fill its parent (the canvas).")]
         [SerializeField] private RectTransform _badgeContainer;
 
-        [Tooltip("Offset from one badge to the next when the container has no LayoutGroup.")]
-        [SerializeField] private Vector2 _badgeStep = new Vector2(320f, 0f);
+        [Tooltip("How far (px) each badge's centre sits in from its screen corner.")]
+        [SerializeField] private Vector2 _cornerInset = new Vector2(180f, 70f);
 
         private readonly Dictionary<PlayerController, PlayerScoreBadge> _badges =
             new Dictionary<PlayerController, PlayerScoreBadge>();
         private readonly List<PlayerController> _departedPlayers = new List<PlayerController>();
-        private bool _containerHasLayoutGroup;
 
         private void Awake()
         {
-            if (_badgeContainer == null) { _badgeContainer = (RectTransform)transform; }
-            _containerHasLayoutGroup = _badgeContainer.TryGetComponent<LayoutGroup>(out _);
+            if (_badgeContainer == null)
+            {
+                _badgeContainer = (RectTransform)transform;
+                StretchToFillParent(_badgeContainer);
+            }
 
             Assert.IsNotNull(_onScoresChanged, "ScoreHud: _onScoresChanged is not assigned in the inspector!");
             Assert.IsNotNull(_badgePrefab, "ScoreHud: _badgePrefab is not assigned in the inspector!");
@@ -54,31 +65,50 @@ namespace BallStacks
 
             RemoveDepartedBadges(scores);
 
-            for (int i = 0; i < scores.Count; i++)
+            foreach (PlayerScore score in scores)
             {
-                PlayerScore score = scores[i];
                 if (!_badges.TryGetValue(score.Player, out PlayerScoreBadge badge))
                 {
-                    badge = CreateBadge(score.Player, i);
+                    badge = CreateBadge(score.Player);
                 }
 
                 badge.ShowScore(score);
             }
         }
 
-        private PlayerScoreBadge CreateBadge(PlayerController player, int badgeIndex)
+        private PlayerScoreBadge CreateBadge(PlayerController player)
         {
             PlayerScoreBadge badge = Instantiate(_badgePrefab, _badgeContainer);
             badge.Bind(player);
             _badges.Add(player, badge);
 
-            if (!_containerHasLayoutGroup)
-            {
-                var badgeRect = (RectTransform)badge.transform;
-                badgeRect.anchoredPosition += _badgeStep * badgeIndex;
-            }
-
+            PlaceInCorner((RectTransform)badge.transform, player.PlayerNumber);
             return badge;
+        }
+
+        private void PlaceInCorner(RectTransform badgeRect, int playerNumber)
+        {
+            Vector2 corner = CornerAnchors[(playerNumber - 1) % CornerAnchors.Length];
+            badgeRect.anchorMin = corner;
+            badgeRect.anchorMax = corner;
+            badgeRect.pivot = new Vector2(0.5f, 0.5f);
+
+            // Mirror the inset so the badge's centre always sits inward from
+            // its corner, whichever side of the screen that is.
+            float insetX = _cornerInset.x;
+            if (corner.x > 0.5f) { insetX = -insetX; }
+            float insetY = _cornerInset.y;
+            if (corner.y > 0.5f) { insetY = -insetY; }
+
+            badgeRect.anchoredPosition = new Vector2(insetX, insetY);
+        }
+
+        private static void StretchToFillParent(RectTransform rect)
+        {
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
         }
 
         private void RemoveDepartedBadges(IReadOnlyList<PlayerScore> scores)

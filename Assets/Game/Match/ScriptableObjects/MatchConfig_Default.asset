@@ -11,8 +11,9 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 41f591db00e14e2aaec1dfe65491bb7e, type: 3}
   m_Name: MatchConfig_Default
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   _matchDurationSeconds: 120
   _autoStartMatch: 1
   _scorePollInterval: 0.25
-  _centimetresPerUnit: 100
+  _centimetresPerUnit: 25
+  _scoreDropGraceSeconds: 0.4

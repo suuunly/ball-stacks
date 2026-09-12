@@ -23,9 +23,14 @@ namespace BallStacks
         [Min(1f)]
         [SerializeField] private float _centimetresPerUnit = 100f;
 
+        [Tooltip("How long (seconds) a LOWER stack reading must persist before the scoreboard believes it. Absorbs support-probe flicker from wobbling balls; genuine topples show after this delay. Gains always show instantly.")]
+        [Min(0f)]
+        [SerializeField] private float _scoreDropGraceSeconds = 0.4f;
+
         public float MatchDurationSeconds => _matchDurationSeconds;
         public bool AutoStartMatch => _autoStartMatch;
         public float ScorePollInterval => _scorePollInterval;
         public float CentimetresPerUnit => _centimetresPerUnit;
+        public float ScoreDropGraceSeconds => _scoreDropGraceSeconds;
     }
 }

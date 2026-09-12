@@ -70,26 +70,36 @@ namespace BallStacks
             IsControlled = isControlled;
         }
 
-        // Casts a slightly-smaller sphere downward from the ball's centre. The
-        // ball's own collider fully overlaps the cast at its start, so physics
-        // ignores it and only whatever lies beneath is reported.
         /// <summary>Finds the ball this ball currently rests on, if any.</summary>
         public bool TryGetSupportingBall(out Ball supportingBall)
         {
             supportingBall = null;
 
-            float ballRadius = Radius;
-            float probeRadius = ballRadius * ProbeRadiusScale;
-            float probeDistance = (ballRadius - probeRadius) + _probeDistance;
-
-            bool hitSomething = Physics.SphereCast(
-                transform.position, probeRadius, Vector3.down, out RaycastHit hit,
-                probeDistance, _probeLayers, QueryTriggerInteraction.Ignore);
-            if (!hitSomething) { return false; }
+            if (!ProbeBeneath(out RaycastHit hit)) { return false; }
 
             Rigidbody bodyBeneath = hit.rigidbody;
             bool hasBody = bodyBeneath != null;
             return hasBody && bodyBeneath.TryGetComponent(out supportingBall);
+        }
+
+        /// <summary>Whether anything solid — floor or ball — sits directly beneath this ball.</summary>
+        public bool HasSolidFootingBeneath()
+        {
+            return ProbeBeneath(out _);
+        }
+
+        // Casts a slightly-smaller sphere downward from the ball's centre. The
+        // ball's own collider fully overlaps the cast at its start, so physics
+        // ignores it and only whatever lies beneath is reported.
+        private bool ProbeBeneath(out RaycastHit hit)
+        {
+            float ballRadius = Radius;
+            float probeRadius = ballRadius * ProbeRadiusScale;
+            float probeDistance = (ballRadius - probeRadius) + _probeDistance;
+
+            return Physics.SphereCast(
+                transform.position, probeRadius, Vector3.down, out hit,
+                probeDistance, _probeLayers, QueryTriggerInteraction.Ignore);
         }
 
         private bool IsRestingOnAnotherBall()
