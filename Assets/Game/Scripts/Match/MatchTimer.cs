@@ -36,13 +36,21 @@ namespace BallStacks
             Assert.IsNotNull(_config, "MatchTimer: _config is not assigned in the inspector!");
             Assert.IsNotNull(_onCountdownTicked, "MatchTimer: _onCountdownTicked is not assigned in the inspector!");
             Assert.IsNotNull(_onMatchEnded, "MatchTimer: _onMatchEnded is not assigned in the inspector!");
-
-            enabled = false;
         }
 
+        // Deciding here rather than in Awake: disabling a component in Awake
+        // stops Unity from ever calling its Start, which would strand the
+        // auto-start. Start still runs before this frame's Update, so a
+        // non-auto-start match never ticks early.
         private void Start()
         {
-            if (_config.AutoStartMatch) { BeginMatch(); }
+            if (_config.AutoStartMatch)
+            {
+                BeginMatch();
+                return;
+            }
+
+            enabled = false;
         }
 
         /// <summary>Starts (or restarts) the countdown from the configured match length.</summary>

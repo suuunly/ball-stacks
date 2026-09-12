@@ -5,7 +5,7 @@ using UnityEngine;
 namespace BallStacks
 {
     /// <summary>
-    /// Shows the match countdown as m:ss on whatever TMP text it sits on —
+    /// Shows the match countdown as mm:ss on whatever TMP text it sits on —
     /// a screen-space HUD label or a world-space 3D text alike. Driven purely
     /// by the countdown-ticked event; it never touches the timer itself.
     /// </summary>
@@ -38,7 +38,7 @@ namespace BallStacks
 
             int minutes = wholeSecondsRemaining / SecondsPerMinute;
             int seconds = wholeSecondsRemaining % SecondsPerMinute;
-            _label.text = $"{minutes}:{seconds:00}";
+            _label.text = $"{minutes:00}:{seconds:00}";
         }
     }
 }
