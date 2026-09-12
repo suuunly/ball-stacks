@@ -49,6 +49,18 @@ There is also a **review-unity** skill fragment (`40c44e76-c528-49c8-b777-7d4c67
 5. **Self-review before calling it done.** After writing or changing scripts, evaluate the code against the standards (the review-unity skill fragment describes how). Clean code is part of "done", not a follow-up.
 6. **Keep jam scope in mind.** Balls only, one arena, one mode. Prefer the simplest compliant implementation; lean into physics chaos rather than fighting it.
 
+## Working with Unity
+
+Interact with the Unity Editor through the **Unity CLI** (`unity`, installed at `~/.unity/bin/unity`) — don't guess at editor state or ask the humans to relay it:
+
+- `unity status` — live state of connected editors (project, state, PID).
+- `unity pipeline` — editor automation; after script changes, trigger a recompile and check the console log for errors before calling the work done.
+- `unity test` — run EditMode/PlayMode tests with a results report.
+- `unity list` / `unity command` — discover and execute commands registered on the connected editor.
+- `unity open` / `unity run` / `unity build` — open, run in batch mode, or build the project.
+
+The humans share the editor and may be playtesting — if the editor is in Play mode, stop or wait before recompiling or running EditMode tests.
+
 ## Division of Labour
 
 - **The humans own the editor creativity**: scene composition, placing objects, animations, materials, visual tweaking. Leave them room — don't rearrange scenes or redo visual work uninvited.
