@@ -58,3 +58,7 @@ MonoBehaviour:
     _weight: 1
     _minSize: 0.75
     _maxSize: 1.35
+  - _prefab: {fileID: 873220487607115757, guid: 4b73315d5effc4d01985278eb4f6efd0, type: 3}
+    _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
