@@ -22,4 +22,4 @@ MonoBehaviour:
     m_Bits: 4294967295
   _minLandingNormalY: 0.6
   _maxTowerWalkDepth: 12
-  _claimSettleTime: 0.3
+  _claimSettleTime: 0.6

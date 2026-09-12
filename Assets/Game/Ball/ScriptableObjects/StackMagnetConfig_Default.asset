@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20fb0a1e0541491294c16bc792a4c59f, type: 3}
   m_Name: StackMagnetConfig_Default
   m_EditorClassIdentifier: 
-  _coneHalfAngle: 20
-  _coneHeight: 7
+  _coneHalfAngle: 30
+  _coneHeight: 5
   _lateralFalloff:
     serializedVersion: 2
     m_Curve:
@@ -27,7 +27,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1
+      time: 0.8
       value: 0
       inSlope: 0
       outSlope: 0
@@ -64,7 +64,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   _maxPullAcceleration: 30
   _weightSupport: 0.9
-  _verticalSeatDamping: 6
+  _verticalSeatDamping: 3
   _requirePlayerAnchor: 1
   _landingAssist: 0.6
   _horizontalDamping: 8
