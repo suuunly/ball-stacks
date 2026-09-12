@@ -54,7 +54,7 @@ There is also a **review-unity** skill fragment (`40c44e76-c528-49c8-b777-7d4c67
 Interact with the Unity Editor through the **Unity CLI** (`unity`, installed at `~/.unity/bin/unity`) — don't guess at editor state or ask the humans to relay it:
 
 - `unity status` — live state of connected editors (project, state, PID).
-- `unity pipeline` — editor automation; after script changes, trigger a recompile and check the console log for errors before calling the work done.
+- `unity command recompile` → poll `unity command recompile_status` / `unity command console` — after script changes, recompile and check for errors before calling the work done. (`unity pipeline` only installs/upgrades the Pipeline package — it is not the recompile command.)
 - `unity test` — run EditMode/PlayMode tests with a results report.
 - `unity list` / `unity command` — discover and execute commands registered on the connected editor.
 - `unity open` / `unity run` / `unity build` — open, run in batch mode, or build the project.
