@@ -71,3 +71,12 @@ The humans share the editor and may be playtesting — if the editor is in Play 
 - Unknown design question mid-task → ask the user, then capture the decision/feature as a Usable fragment in Gaman Games.
 - New reusable pattern or non-obvious fix discovered → capture as Recipe/Solution fragment at wrap-up.
 - Keep `Assets/Game/` as the home for game content (feature-based folders per the structure standard); `Assets/TutorialInfo/` is Unity template noise and can be ignored.
+
+## Usable Tasks
+
+- WorkspaceId: `d96cca7c-bfe2-455a-b039-ad733415545a` (Gaman Games)
+- TaskFragmentTypeId: `7311ceb1-ac4f-4426-b55b-5155f9b54072` (Task)
+- FeatureFragmentTypeId: `316e2a1d-a0bd-43f0-a798-7c9485a86c41` (Feature)
+- Project: `ball-stacks` (repo tag: `Ball-Stacks`)
+
+Paper-trail convention: scoped work gets a Feature fragment plus child Task fragments (My Tasks Planner format); Tasks reference their parent Feature by ID, and the Feature lists its child tasks.
