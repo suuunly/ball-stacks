@@ -1,0 +1,21 @@
+{
+    "name": "Game.Editor",
+    "rootNamespace": "BallStacks.EditorTools",
+    "references": [
+        "GUID:69df7096210344af8bcb4fc7c665bb23",
+        "GUID:0a48af7b45314135bd0953168a09cc24",
+        "GUID:24babab928c94788a120e0a82618aef0",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
