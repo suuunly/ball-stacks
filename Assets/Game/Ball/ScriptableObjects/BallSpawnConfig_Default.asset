@@ -42,3 +42,15 @@ MonoBehaviour:
     _weight: 1
     _minSize: 0.75
     _maxSize: 1.35
+  - _prefab: {fileID: 1598345235592167252, guid: 4a5c99b6c3a844365964354373944084, type: 3}
+    _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
+  - _prefab: {fileID: 8148368122390778398, guid: cafaf03ee15a44e3687bd7eea79fd8ea, type: 3}
+    _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
+  - _prefab: {fileID: 9019231535349163039, guid: f996b0ce4f0744aa3b9563251d468aca, type: 3}
+    _weight: 1
+    _minSize: 0.75
+    _maxSize: 1.35
