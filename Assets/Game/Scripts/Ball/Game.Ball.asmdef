@@ -1,0 +1,16 @@
+{
+    "name": "Game.Ball",
+    "rootNamespace": "BallStacks",
+    "references": [
+        "GUID:69df7096210344af8bcb4fc7c665bb23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
