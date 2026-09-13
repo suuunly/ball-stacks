@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: BallSpawnConfig_Default
   m_EditorClassIdentifier: Game.Ball::BallStacks.BallSpawnConfigSO
   _spawnCount: 90
+  _massSizeExponent: 1
   _balls:
   - _prefab: {fileID: 1774949867940619219, guid: cef7f9b6d462e4961ae66d099c358054, type: 3}
     _weight: 1

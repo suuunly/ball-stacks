@@ -47,17 +47,13 @@ namespace BallStacks
             }
         }
 
-        private static void ApplySizeVariation(Ball ball, float sizeMultiplier)
+        private void ApplySizeVariation(Ball ball, float sizeMultiplier)
         {
             bool keepsPrefabSize = Mathf.Approximately(sizeMultiplier, 1f);
             if (keepsPrefabSize) { return; }
 
             ball.transform.localScale *= sizeMultiplier;
-
-            // Mass follows volume so a grown ball lands and shoves like the
-            // bigger ball it now is, instead of bouncing around like a balloon.
-            float volumeGrowth = sizeMultiplier * sizeMultiplier * sizeMultiplier;
-            ball.Rigidbody.mass *= volumeGrowth;
+            ball.Rigidbody.mass *= _config.MassMultiplierForSize(sizeMultiplier);
         }
 
         private Vector3 RandomPointInVolume()

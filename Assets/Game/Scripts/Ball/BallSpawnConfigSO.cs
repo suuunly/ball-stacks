@@ -48,8 +48,18 @@ namespace BallStacks
         [Tooltip("The ball variants that can spawn, each with its relative weight.")]
         [SerializeField] private List<SpawnEntry> _balls = new List<SpawnEntry>();
 
+        [Tooltip("How strongly a ball's mass follows its size multiplier. 3 = true volume (a 1.8x bigger ball is ~6x heavier, so big cargo yanks a small carrier around and its jumps suffer); 1 = mass grows in step with size; 0 = every ball weighs the same. Only mass RATIOS matter here — movement, jumps and the stack magnet are all mass-independent, so this mainly controls how hard big balls shove small ones.")]
+        [Range(0f, 3f)]
+        [SerializeField] private float _massSizeExponent = 1f;
+
         public int SpawnCount => _spawnCount;
         public IReadOnlyList<SpawnEntry> Balls => _balls;
+
+        /// <summary>Mass multiplier for a ball spawned at the given size multiplier.</summary>
+        public float MassMultiplierForSize(float sizeMultiplier)
+        {
+            return Mathf.Pow(sizeMultiplier, _massSizeExponent);
+        }
 
         /// <summary>Picks a spawn entry at random, honouring the entry weights.</summary>
         public SpawnEntry PickRandomEntry()

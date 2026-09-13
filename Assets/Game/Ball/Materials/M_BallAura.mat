@@ -19,16 +19,17 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
-  m_LockedProperties:
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: {}
-    m_Ints: {}
+    m_TexEnvs: []
+    m_Ints: []
     m_Floats:
     - _PulseAmount: 0.25
     - _PulseSpeed: 4
-    - _RimIntensity: 1.6
-    - _RimPower: 2.5
+    - _RimIntensity: 4
+    - _RimPower: 2.51
     m_Colors:
     - _BaseColor: {r: 1, g: 0.35, b: 0.25, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1
