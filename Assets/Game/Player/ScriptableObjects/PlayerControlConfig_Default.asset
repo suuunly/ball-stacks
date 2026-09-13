@@ -15,11 +15,11 @@ MonoBehaviour:
   _moveAcceleration: 20
   _maxMoveSpeed: 8
   _stopDeceleration: 10
-  _jumpSpeed: 8
+  _jumpClearance: 1.75
   _groundProbeDistance: 0.1
   _groundLayers:
     serializedVersion: 2
     m_Bits: 4294967295
   _minLandingNormalY: 0.6
   _maxTowerWalkDepth: 12
-  _claimSettleTime: 0.6
+  _claimSettleTime: 0.25

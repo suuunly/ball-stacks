@@ -130,8 +130,7 @@ namespace BallStacks
         // player's controlled ball — rivals don't get free launches.
         private void JumpWithTower()
         {
-            float controlledDiameter = _controlledOccupancy.Radius * 2f;
-            Vector3 jumpVelocity = Vector3.up * _config.JumpSpeedForDiameter(controlledDiameter);
+            Vector3 jumpVelocity = Vector3.up * _config.JumpSpeed;
 
             Ball current = ControlledBall;
             for (int depth = 0; depth <= _config.MaxTowerWalkDepth; depth++)
@@ -244,9 +243,18 @@ namespace BallStacks
         // Casts a slightly-smaller sphere outward from the ball's centre. The
         // ball's own collider fully overlaps the cast at its start, so physics
         // ignores it and only whatever lies just beyond its surface is reported.
+        // Sized to the probed ball, not the controlled one: the tower-jump
+        // walk probes from cargo balls bigger than the controlled ball, and a
+        // controlled-sized probe would start and end inside the cargo's own
+        // collider, seeing nothing above it.
         private bool ProbeFromBall(Ball fromBall, Vector3 direction, out RaycastHit hit)
         {
-            float ballRadius = _controlledOccupancy.Radius;
+            hit = default;
+
+            BallOccupancy occupancy = fromBall.Occupancy;
+            if (occupancy == null) { return false; }
+
+            float ballRadius = occupancy.Radius;
             float probeRadius = ballRadius * ProbeRadiusScale;
             float probeDistance = (ballRadius - probeRadius) + _config.GroundProbeDistance;
 

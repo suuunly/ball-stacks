@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 163396c2a7f8b46ed9cafa36797802a6, type: 3}
+  m_Name: MusicConfig_Default
+  m_EditorClassIdentifier: Game.Audio::BallStacks.MusicConfigSO
+  _matchLoopClip: {fileID: 8300000, guid: 27631b17635344967a6014f135c5f454, type: 3}
+  _gameOverClip: {fileID: 8300000, guid: 0ebef2ff7a06d47a395fd2b491dd3164, type: 3}
+  _fadeInSeconds: 2
+  _crossfadeSeconds: 1.5
+  _matchVolume: 1
+  _gameOverVolume: 1
+  _loopGameOverTrack: 0

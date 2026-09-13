@@ -66,6 +66,6 @@ MonoBehaviour:
   _weightSupport: 0.9
   _verticalSeatDamping: 3
   _requirePlayerAnchor: 1
-  _landingAssist: 0.6
+  _landingAssist: 1
   _horizontalDamping: 8
   _ownerVelocitySmoothingTime: 0.2
