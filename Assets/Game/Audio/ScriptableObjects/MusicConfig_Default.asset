@@ -16,6 +16,6 @@ MonoBehaviour:
   _gameOverClip: {fileID: 8300000, guid: 0ebef2ff7a06d47a395fd2b491dd3164, type: 3}
   _fadeInSeconds: 2
   _crossfadeSeconds: 1.5
-  _matchVolume: 1
-  _gameOverVolume: 1
+  _matchVolume: 0.4
+  _gameOverVolume: 0.7
   _loopGameOverTrack: 0
