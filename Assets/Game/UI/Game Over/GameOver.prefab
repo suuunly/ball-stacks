@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6939764753216298881}
   - component: {fileID: 4490969263460898886}
   - component: {fileID: 3056717601905226093}
+  - component: {fileID: 7294705057385278531}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -212,6 +213,19 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7294705057385278531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 828447560160325563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2eed06f2d91443990a803dcff8ffa25, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Game.Match::BallStacks.WinnerLabel
+  _onWinnerDecided: {fileID: 11400000, guid: 50ddd80a80354861b351fcf7ea6e2048, type: 2}
 --- !u!1 &2255410106893935309
 GameObject:
   m_ObjectHideFlags: 0

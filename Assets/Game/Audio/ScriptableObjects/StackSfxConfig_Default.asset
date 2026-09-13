@@ -11,17 +11,17 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2582e671ae234e3e9dce348589c605e5, type: 3}
   m_Name: StackSfxConfig_Default
-  m_EditorClassIdentifier:
+  m_EditorClassIdentifier: 
   _jumpClipsByStackSize:
-  - {fileID: 8300000, guid: d4275752511dd40a38bccb8dc49fefee, type: 3}
-  - {fileID: 8300000, guid: 0c5be68db2ef247508447b602b723af8, type: 3}
-  - {fileID: 8300000, guid: 0027e94d9803f46fdb6d1d8e4a416b33, type: 3}
-  - {fileID: 8300000, guid: 15f5da9eb6de645d482798849c33012a, type: 3}
-  - {fileID: 8300000, guid: 93a4cf297da4043f8a616d07fafdb0a3, type: 3}
-  - {fileID: 8300000, guid: 7afd1a7b130164775956dcddfc7df185, type: 3}
+  - {fileID: 8300000, guid: c5b7eee8da31a43008277a956df0b3aa, type: 3}
+  - {fileID: 8300000, guid: 94e2c876adf0641e1a278ca9ce9bbbc8, type: 3}
+  - {fileID: 8300000, guid: da2a1deb2c8a349fb87a6c1cc896ad1c, type: 3}
+  - {fileID: 8300000, guid: 440dc96abfe7e44d5af66c86c57e8521, type: 3}
+  - {fileID: 8300000, guid: 055e4d1222d3141e0bf45d2bee19e856, type: 3}
+  - {fileID: 8300000, guid: 794ae9a312ac04230bfd047c7c4adf95, type: 3}
   _stackFallClip: {fileID: 8300000, guid: e7a886528863c46fd896dfcc7109f5d6, type: 3}
   _pitchJitter: 0.08
   _jumpVolume: 1
   _fallVolume: 1
-  _spatialBlend: 1
+  _spatialBlend: 0
   _minStackForFall: 2
