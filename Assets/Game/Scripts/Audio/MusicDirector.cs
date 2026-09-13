@@ -40,8 +40,11 @@ namespace BallStacks
 
             _onWinnerDecided.OnRaised += HandleWinnerDecided;
 
-            // Update only runs while a fade is in progress.
-            enabled = false;
+            // Update only runs while a fade is in progress, but the idle
+            // disable must NOT happen here: disabling a component in Awake
+            // stops Unity from ever calling its Start (same gotcha MatchTimer
+            // documents), which would strand the fade-in. Start begins the
+            // fade-in immediately, and FinishFade disables between fades.
         }
 
         private void OnDestroy()
