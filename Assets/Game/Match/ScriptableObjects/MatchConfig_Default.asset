@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MatchConfig_Default
   m_EditorClassIdentifier: 
   _matchDurationSeconds: 120
-  _autoStartMatch: 1
+  _autoStartMatch: 0
   _scorePollInterval: 0.25
   _centimetresPerUnit: 25
   _scoreDropGraceSeconds: 0.4
